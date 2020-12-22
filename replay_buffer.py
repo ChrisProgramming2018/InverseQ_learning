@@ -1,5 +1,4 @@
 import numpy as np
-import kornia
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -17,9 +16,6 @@ class ReplayBuffer(object):
         self.rewards = np.empty((capacity, 1), dtype=np.float32)
         self.not_dones = np.empty((capacity, 1), dtype=np.float32)
         self.not_dones_no_max = np.empty((capacity, 1), dtype=np.float32)
-        self.aug_trans = nn.Sequential(
-            nn.ReplicationPad2d(image_pad),
-            kornia.augmentation.RandomCrop((obs_shape[-1], obs_shape[-1])))
 
         self.idx = 0
         self.full = False
