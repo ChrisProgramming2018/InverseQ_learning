@@ -16,8 +16,6 @@ def main(args):
     param["run"] = args.run
     print("Start Programm in {}  mode".format(args.mode))
     env = gym.make(param["env_name"])
-    param["batch_size"] = args.batch_size
-    param["eval"] = args.eval
     if args.mode == "hypersearch":
         param['file_path'] = str(args.locexp)
         param["locexp"] = str(args.locexp) +  "/run-{}".format(param["run"])
@@ -25,13 +23,14 @@ def main(args):
         param["lr"] = args.lr
         param["fc1_units"] = args.fc1_units
         param["fc2_units"] = args.fc2_units
-        param["fc3_units"] = args.fc3_units
         param["clip"] = args.clip
+        param["batch_size"] = args.batch_size
+        param["eval"] = args.eval
         mkdir("", str(param['locexp']))
     text = str(param)
-    write_parameter(str(param['locexp']) + '/parameter', text)
     print(param)
-    train(env, param)
+    write_parameter(str(param['locexp']) + '/parameter', text)
+    train(env, args, param)
 
 
 
@@ -47,11 +46,14 @@ if __name__ == "__main__":
     parser.add_argument('--lr', default=5e-4, type=float)
     parser.add_argument('--fc1_units', default=64, type=int)
     parser.add_argument('--fc2_units', default=64, type=int)
-    parser.add_argument('--fc3_units', default=64, type=int)
     parser.add_argument('--clip', default=-1, type=int)
-    parser.add_argument('--mode', default="hypersearch", type=str)
+    parser.add_argument('--mode', default="hypersearch", type=str) 
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--eval', default=50, type=int)
     parser.add_argument('--run', default=1, type=int)
+    parser.add_argument('--size', default=84, type=int)
+    parser.add_argument('--history_length', default=6, type=int)
+    parser.add_argument('--device', default="cuda", type=str)
+    parser.add_argument('--limit_data', default=False, type=bool)
+    parser.add_argument('--eval', default=1000, type=int)
     arg = parser.parse_args()
     main(arg)

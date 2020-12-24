@@ -32,14 +32,15 @@ def train(env, args, config):
         agent.fit_q(args, config)
         return
     t0 = time.time()
-    memory = ReplayBuffer((6, config["size"], config["size"]), (1,), config["expert_buffer_size"], config["image_pad"], config["device"])
+    memory = ReplayBuffer((6, config["size"], config["size"]), (1,), config["buffer_size"], config["image_pad"], config["device"])
     memory.load_memory(data_path + config["buffer_path"])
     print("memory idx ",memory.idx)  
     agent = Agent(state_size=200, action_size=8,  config=config) 
     agent.test_q_value(memory)
     # agent.load("models-28_11_2020_22:25:27/27000-")
-    memory_t = ReplayBuffer((6, config["size"], config["size"]), (1,), config["expert_buffer_size"], config["image_pad"], config["device"])
+    memory_t = ReplayBuffer((6, config["size"], config["size"]), (1,), int(config["expert_buffer_size"]), config["image_pad"], config["device"])
     memory_t.load_memory(data_path + config["expert_buffer_path"])
+    print("memory all idx ",memory_t.idx)  
     if args.limit_data:
         print("Use less data ")
         memory.idx = config["idx"] 
